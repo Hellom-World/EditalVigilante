@@ -1,36 +1,72 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Edital Vigilante — Web App
 
-## Getting Started
+Dashboard de contratação pública municipal. Construído com Next.js 16 + Tailwind CSS 4.
 
-First, run the development server:
+---
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+## Stack
+
+- **Next.js 16** (App Router, SSG)
+- **Tailwind CSS 4**
+- **TypeScript**
+- **next-themes** — dark mode
+
+---
+
+## Estrutura
+
+```
+src/
+├── app/
+│   ├── layout.tsx              — layout global + providers
+│   ├── page.tsx                — landing page com cards de municípios
+│   ├── globals.css
+│   └── [municipio]/
+│       └── page.tsx            — dashboard dinâmico (/arouca, /porto, …)
+├── components/
+│   ├── Dashboard.tsx           — orquestrador do dashboard
+│   ├── SummaryCards.tsx        — cards de totais
+│   ├── CategoryCard.tsx        — card expansível por categoria
+│   ├── EmpresasGrid.tsx        — ranking de empresas
+│   ├── YearDropdown.tsx        — dropdown custom de ano
+│   ├── ThemeToggle.tsx         — botão dark/light mode
+│   └── Providers.tsx           — ThemeProvider
+├── lib/
+│   ├── formatters.ts           — formatação de moeda e datas
+│   ├── empresas.ts             — agregação de empresas
+│   └── municipios.ts           — registo de municípios disponíveis
+└── types/
+    └── contracts.ts            — tipos TypeScript dos dados
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+---
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+## Desenvolvimento
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+```bash
+npm install
+npm run dev        # http://localhost:3000
+```
 
-## Learn More
+Os dados são lidos de `public/arouca.json`. Para actualizar:
 
-To learn more about Next.js, take a look at the following resources:
+```bash
+cp ../data/contratos_base_arouca.json public/arouca.json
+```
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+---
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+## Adicionar um município
 
-## Deploy on Vercel
+1. Gerar os dados com os scrapers (ver `../scrapers/README.md`)
+2. Copiar o JSON para `public/<slug>.json`
+3. Em `src/lib/municipios.ts`, alterar `ativo: false` para `ativo: true`
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+---
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+## Deploy (Vercel)
+
+```bash
+npx vercel        # primeiro deploy
+npx vercel --prod # deploys seguintes
+```
